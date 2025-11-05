@@ -1,49 +1,43 @@
 require("dotenv").config();
 const { ethers } = require("ethers");
-const electionABI = require("./artifacts/Election.json").abi;
 const fs = require("fs");
 const path = require("path");
 const { groth16 } = require("snarkjs");
-
+const {contractGanache, providerGanache} = require("./config/blockchain");
 async function main() {
-  const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+  
 
   // 🧠 Khởi tạo 3 trustee (trong đó admin cũng là 1)
-  const admin = new ethers.Wallet(process.env.CA_PRIVATE_KEY, provider); // cũng là trustee3
-  const t1 = new ethers.Wallet(process.env.PRIVATE_KEY_T1, provider);
-  const t2 = new ethers.Wallet(process.env.PRIVATE_KEY_T2, provider);
+  const admin = new ethers.Wallet(process.env.GANACHE_PRIVATE_KEY_T3, providerGanache); // cũng là trustee3
+  const t1 = new ethers.Wallet(process.env.GANACHE_PRIVATE_KEY_T1, providerGanache);
+  const t2 = new ethers.Wallet(process.env.GANACHE_PRIVATE_KEY_T2, providerGanache);
 
-  const contract = new ethers.Contract(
-    process.env.CONTRACT_ADDRESS,
-    electionABI,
-    provider
-  );
-  console.log("🧾 Contract:", await contract.getAddress());
+  console.log("🧾 Contract:", await contractGanache.getAddress());
   console.log("👑 Admin / Trustee3:", admin.address);
 
-  const {contractGanache} = require("../config/blockchain");
+
 
   // =============================
   // 1️⃣ Đăng ký 3 trustee
   // =============================
-  // const electionAdmin = contract.connect(admin);
-  // try {
-  //   const tx = await electionAdmin.registerTrustees([
-  //     t1.address,
-  //     t2.address,
-  //     admin.address,
-  //   ]);
-  //   console.log("📡 registerTrustees tx:", tx.hash);a
-  //   await tx.wait();
-  // } catch (err) {
-  //   console.log("⚠️ Có thể đã đăng ký trước:", err.message);
-  // }
+  const electionAdmin = contractGanache.connect(admin);
+  try {
+    const tx = await electionAdmin.registerTrustees([
+      t1.address,
+      t2.address,
+      admin.address,
+    ]);
+    console.log("📡 registerTrustees tx:", tx.hash);
+    await tx.wait();
+  } catch (err) {
+    console.log("⚠️ Có thể đã đăng ký trước:", err.message);
+  }
 
   //   // =============================
   //   // 2️⃣ Cả 3 trustee verify proof
   //   // =============================
   async function verify(trustee, name) {
-  const instance = contract.connect(trustee);
+  const instance = contractGanache.connect(trustee);
   const signerAddr = await trustee.getAddress();
   console.log(`📌 Connected as ${name}: ${signerAddr}`);
 
@@ -118,7 +112,7 @@ async function main() {
   //   // =============================
 
   try {
-  const contractWithSigner = contract.connect(t2);
+  const contractWithSigner = contractGanache.connect(t2);
 
   // 🔹 Đọc mảng D_i (đã tạo sẵn bằng script test7.js)
   // File lưu dạng [[D1x,D1y],[D2x,D2y],...]

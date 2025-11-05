@@ -8,7 +8,7 @@ const merkleUtils = require("../utils/merkleUtils");
 const Election = require("../models/electionModel");
 const Voter = require("../models/voterModel");
 const Candidate = require("../models/candidateModel");
-const { contract } = require("../config/blockchain");
+const { contract , contractGanache} = require("../config/blockchain");
 const { ec: EC } = require("elliptic");
 const { getPoseidon } = require("../utils/hasherUtils");
 const ec = new EC("secp256k1");
@@ -394,6 +394,7 @@ async function finalizeAndPublishMerkle(electionId) {
 }
 
 //  1. Public thông tin election lên blockchain
+
 async function publishElectionInfo(electionId) {
   const election = await Election.findOne({ election_id: electionId });
   if (!election) {
@@ -402,7 +403,7 @@ async function publishElectionInfo(electionId) {
 
   console.log(" Publishing election info to blockchain...");
 
-  const tx = await contract.setElectionInfo(
+  const tx = await contractGanache.setElectionInfo(
     election.election_id,
     election.name,
     election.start_date.toISOString(),
