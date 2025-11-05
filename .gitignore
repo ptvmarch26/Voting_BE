@@ -1,0 +1,11 @@
+node_modules/
+.env
+ZKP/build/
+ZKP/powersOfTau28_hez_final_21.ptau
+ZKP/powersOfTau28_hez_final_16.ptau
+ZKP/powersOfTau28_hez_final_10.ptau
+ZKP/pot21_final.ptau
+ZKP/pot21_0000.ptau
+ZKP/pot16_final.ptau
+ZKP/pot16_0000.ptau
+uploads/
