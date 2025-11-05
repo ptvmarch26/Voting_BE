@@ -1,0 +1,65 @@
+{
+  "trustees_used": [
+    "Alice",
+    "Bob"
+  ],
+  "threshold": "2/3",
+  "total_voters": 10,
+  "total_time_ms": 592.77,
+  "results": [
+    {
+      "candidate": 1,
+      "votes": 2,
+      "time_ms": 30.22
+    },
+    {
+      "candidate": 2,
+      "votes": 0,
+      "time_ms": 24.62
+    },
+    {
+      "candidate": 3,
+      "votes": 0,
+      "time_ms": 24.54
+    },
+    {
+      "candidate": 4,
+      "votes": 0,
+      "time_ms": 23.52
+    },
+    {
+      "candidate": 5,
+      "votes": 0,
+      "time_ms": 23.5
+    },
+    {
+      "candidate": 6,
+      "votes": 0,
+      "time_ms": 24.33
+    },
+    {
+      "candidate": 7,
+      "votes": 0,
+      "time_ms": 25.09
+    },
+    {
+      "candidate": 8,
+      "votes": 0,
+      "time_ms": 24.18
+    },
+    {
+      "candidate": 9,
+      "votes": 0,
+      "time_ms": 23.99
+    },
+    {
+      "candidate": 10,
+      "votes": 0,
+      "time_ms": 24.94
+    }
+  ],
+  "winner": {
+    "candidate": 1,
+    "votes": 2
+  }
+}
