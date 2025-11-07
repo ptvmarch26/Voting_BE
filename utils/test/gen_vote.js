@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { ethers } = require("ethers");
 const { buildBabyjub, buildPoseidon } = require("circomlibjs");
-
+const crypto = require("crypto");
 // === 1. LẤY CONTRACT TỪ CONFIG CỦA BACKEND ===
 // Đây là thay đổi quan trọng nhất:
 // Chúng ta tái sử dụng 'contract' đã được khởi tạo ở backend
@@ -20,17 +20,21 @@ const { contractGanache } = require("../../config/blockchain");
 async function encryptVote(babyjub, PKx, PKy, numCandidates, choice) {
   const F = babyjub.F;
   const G = babyjub.Base8;
-
+  const n = babyjub.subOrder;
   const PK = [F.e(PKx), F.e(PKy)]; // Public key hệ thống
 
   const mVec = Array(numCandidates).fill(0n);
   mVec[choice] = 1n; // Chọn ứng cử viên
 
   // Tạo số ngẫu nhiên r
-  const rVec = Array.from(
-    { length: numCandidates },
-    () => BigInt(Math.floor(Math.random() * 1e6)) + 1n
-  );
+  const rVec = Array.from({ length: numCandidates }, () => {
+      const rBytes = crypto.randomBytes(32);
+      return BigInt("0x" + rBytes.toString("hex")) % n;
+    });
+  // const rVec = Array.from(
+  //   { length: numCandidates },
+  //   () => BigInt(Math.floor(Math.random() * 1e6)) + 1n
+  // );
 
   const C1x = [],
     C1y = [],
@@ -98,10 +102,10 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 async function main() {
   // === 1. CẤU HÌNH SCRIPT ===
-  const SECRETS_FILE_PATH = "./voter_secrets_for_script_1000.json"; // ❗️Đảm bảo file này đồng cấp với script
+  const SECRETS_FILE_PATH = "./voter_secrets_for_script_100.json"; // ❗️Đảm bảo file này đồng cấp với script
   const OUTPUT_VOTES_JSON = "./simulated_votes_for_db.json"; // ❗️File output mới
   const ELECTION_ID = "ELC2024"; // ❗️ID cuộc bầu cử
-  const VOTES_TO_SIMULATE = 100; // Chỉ mô phỏng 5 phiếu bầu cho nhanh
+  const VOTES_TO_SIMULATE = 10; // Chỉ mô phỏng 5 phiếu bầu cho nhanh
   const DELAY_BETWEEN_VOTES_MS = 500; // 1 giây (có thể giảm)
   // ============================
 

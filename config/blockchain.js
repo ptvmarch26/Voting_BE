@@ -2,6 +2,7 @@ const { ethers } = require("ethers");
 require("dotenv").config();
 
 const electionABI = require("../artifacts/Election.json");
+const votingABI = require("../artifacts/Voting.json");
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 console.log("RPC_URL:", process.env.RPC_URL);
@@ -19,8 +20,8 @@ const walletGanache = new ethers.Wallet(
   providerGanache
 );
 const contractGanache = new ethers.Contract(
-  process.env.GANACHE_CONTRACT_ADDRESS,
-  electionABI.abi,
+  process.env.GANACHE_VOTING_ADDRESS,
+  votingABI.abi,
   walletGanache
 );
 

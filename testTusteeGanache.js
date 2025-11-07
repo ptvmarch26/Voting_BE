@@ -20,18 +20,18 @@ async function main() {
   // =============================
   // 1️⃣ Đăng ký 3 trustee
   // =============================
-  const electionAdmin = contractGanache.connect(admin);
-  try {
-    const tx = await electionAdmin.registerTrustees([
-      t1.address,
-      t2.address,
-      admin.address,
-    ]);
-    console.log("📡 registerTrustees tx:", tx.hash);
-    await tx.wait();
-  } catch (err) {
-    console.log("⚠️ Có thể đã đăng ký trước:", err.message);
-  }
+//   const electionAdmin = contractGanache.connect(admin);
+//   try {
+//     const tx = await electionAdmin.registerTrustees([
+//       t1.address,
+//       t2.address,
+//       admin.address,
+//     ]);
+//     console.log("📡 registerTrustees tx:", tx.hash);
+//     await tx.wait();
+//   } catch (err) {
+//     console.log("⚠️ Có thể đã đăng ký trước:", err.message);
+//   }
 
   //   // =============================
   //   // 2️⃣ Cả 3 trustee verify proof
@@ -104,7 +104,7 @@ async function main() {
   }
 }
 
-
+console.time(`verifyPartialProof time`);
   // 🚀 Chạy lần lượt
   await verify(t2, "Trustee2");
   //   // =============================
@@ -117,7 +117,7 @@ async function main() {
   // 🔹 Đọc mảng D_i (đã tạo sẵn bằng script test7.js)
   // File lưu dạng [[D1x,D1y],[D2x,D2y],...]
   const D_points = JSON.parse(
-    fs.readFileSync("./utils/D_i_array2.json", "utf8")
+    fs.readFileSync("./utils/D_array_trustee2.json", "utf8")
   );
 
   console.log(`📤 Đang gửi ${D_points.length} điểm D_i lên blockchain...`);
@@ -130,11 +130,12 @@ async function main() {
   console.log("✅ publishPartialDecryption confirmed, block:", receipt.blockNumber);
 
   // 🔹 In ra trạng thái thresholdCount
-  const cnt = await contract.thresholdCount();
+  const cnt = await contractGanache.thresholdCount();
   console.log("🔢 thresholdCount:", cnt.toString());
 } catch (err) {
   console.error("❌ publishPartialDecryption tx failed:", err.reason || err.message);
 }
+console.timeEnd(`verifyPartialProof time`);
 
   //   // =============================
   //   // 4️⃣ In trạng thái cuối

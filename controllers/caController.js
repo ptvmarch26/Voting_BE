@@ -134,6 +134,7 @@ exports.publishElectionInfo = async (req, res) => {
       ? res.success(result.result, result.EM)
       : res.error(result.EC, result.EM);
   } catch (err) {
+    console.log("err", err)
     return res.InternalError();
   }
 };

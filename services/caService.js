@@ -403,11 +403,14 @@ async function publishElectionInfo(electionId) {
 
   console.log(" Publishing election info to blockchain...");
 
+  const startDate = Math.floor(new Date(election.start_date).getTime() / 1000);
+  const endDate   = Math.floor(new Date(election.end_date).getTime() / 1000);
+
   const tx = await contractGanache.setElectionInfo(
     election.election_id,
     election.name,
-    election.start_date.toISOString(),
-    election.end_date.toISOString()
+    startDate,
+    endDate
   );
 
   const receipt = await tx.wait();
